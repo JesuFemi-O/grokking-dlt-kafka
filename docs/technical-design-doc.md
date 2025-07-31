@@ -58,11 +58,13 @@ This project proposes enhancements to fill those gaps with minimal glue code and
 
 ```mermaid
 flowchart TD
-    A[KAFKA TOPICS] -->|Regex or Static| B[Kafka Consumer]
-    B --> C[Message Processor (Avro / JSON)]
-    C --> D[DLT Resource Generator]
-    D --> E[DLT Pipeline]
-    E --> F[Destination (DuckDB, BigQuery, etc)]
+    A["KAFKA_TOPICS"] --> B["Regex or Static"]
+    B --> C["Message Processor - Avro/JSON"]
+    C --> D["DLT Resource Generator"]
+    D --> E["DLT Pipeline"]
+    E --> F["Destination - DuckDB, BigQuery, etc"]
+    
+    B --> |"Kafka Consumer"| C
 ```
 
 ### 5.2 Components
