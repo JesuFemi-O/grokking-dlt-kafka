@@ -1,0 +1,2 @@
+confluent-kafka>=2.3.0
+dlt[duckdb]>=0.5.1

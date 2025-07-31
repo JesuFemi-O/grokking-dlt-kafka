@@ -1,0 +1,20 @@
+engine_version: 1
+sources:
+  kafka:
+    is_dirty: false
+    last_commit_sha: 2a094a729e3805c3f6244a92e515369d35cfa704
+    last_commit_timestamp: '2025-07-30T17:22:32+02:00'
+    files:
+      kafka/__init__.py:
+        commit_sha: 2a094a729e3805c3f6244a92e515369d35cfa704
+        git_sha: 846b356210bf5c219539f0ae45f9724c68d15352
+        sha3_256: 8eb2c44d402807f3937ca24c383000c8f7fe40c8c2136a28a2c827f6cea7fbdf
+      kafka/README.md:
+        commit_sha: 2a094a729e3805c3f6244a92e515369d35cfa704
+        git_sha: 152a3f94afca06c6d2cd77b32e115b3a566b65ab
+        sha3_256: 9cb8048c2d6ecf706e1fe95ee7a6d3ac0b430de9547660bff514d4e715a48375
+      kafka/helpers.py:
+        commit_sha: 2a094a729e3805c3f6244a92e515369d35cfa704
+        git_sha: 1b2c1af8828f1bb9ba3799115e535fde32f40172
+        sha3_256: 351b92a5738a92f06c447b4140792e91985f13ad46f03f65a4150fc05edb4782
+    dlt_version_constraint: '>=0.5.1'
