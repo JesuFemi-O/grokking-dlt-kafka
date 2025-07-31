@@ -1,0 +1,10 @@
+[project]
+name = "grokking-dlt-kafka"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10.7"
+dependencies = [
+    "dlt[duckdb]>=1.14.1",
+    "psutil>=7.0.0",
+]
