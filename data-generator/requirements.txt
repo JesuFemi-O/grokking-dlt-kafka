@@ -1,0 +1,18 @@
+# Core dependencies
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+pydantic-avro>=0.6.0
+faker>=20.0.0
+
+# Kafka and Schema Registry
+confluent-kafka>=2.3.0
+
+# Environment management
+python-dotenv>=1.0.0
+
+# Additional dependencies or "confluent-kafka[avro,json,protobuf]>=2.3.0" adds them all
+attrs
+authlib
+httpx
+cachetools
+fastavro
