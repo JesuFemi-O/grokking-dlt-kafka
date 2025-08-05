@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDC Pipeline Visual</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 50%, #2d1b69 100%);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1d3a 100%);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                linear-gradient(rgba(64, 224, 208, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(64, 224, 208, 0.3) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .title {
+            position: absolute;
+            top: 60px;
+            left: 60px;
+            right: 60px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #40e0d0, #48cae4, #9d4edd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            line-height: 1.2;
+            text-shadow: 0 0 30px rgba(64, 224, 208, 0.3);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 16px 0 0 0;
+            font-weight: 500;
+        }
+
+        .pipeline-container {
+            position: absolute;
+            top: 200px;
+            left: 0;
+            right: 0;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .data-source {
+            width: 120px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(255, 107, 107, 0.5); }
+        }
+
+        .kafka-hub {
+            width: 200px;
+            height: 120px;
+            background: linear-gradient(135deg, #40e0d0, #48cae4);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #0a0e27;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 12px 40px rgba(64, 224, 208, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kafka-hub::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 4s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+
+        .consumers {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .consumer {
+            width: 160px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .consumer.realtime {
+            background: linear-gradient(135deg, #9d4edd, #c77dff);
+            box-shadow: 0 6px 24px rgba(157, 78, 221, 0.3);
+            animation: realtimePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes realtimePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .consumer.batch {
+            background: linear-gradient(135deg, #06d6a0, #118ab2);
+            box-shadow: 0 6px 24px rgba(6, 214, 160, 0.3);
+            animation: batchPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes batchPulse {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.03); }
+            75% { transform: scale(1); }
+        }
+
+        .consumer.analytics {
+            background: linear-gradient(135deg, #ffd60a, #ffc300);
+            color: #0a0e27;
+            box-shadow: 0 6px 24px rgba(255, 214, 10, 0.3);
+            animation: analyticsPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes analyticsPulse {
+            0%, 100% { transform: scale(1); }
+            16% { transform: scale(1.02); }
+            84% { transform: scale(1); }
+        }
+
+        .flow-arrow {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(64, 224, 208, 0.8), rgba(72, 202, 228, 0.8));
+            position: relative;
+            margin: 0 10px;
+        }
+
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid rgba(72, 202, 228, 0.8);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .flow-arrow.animated {
+            overflow: hidden;
+        }
+
+        .flow-arrow.animated::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: flowAnimation 3s ease-in-out infinite;
+        }
+
+        @keyframes flowAnimation {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(64, 224, 208, 0.6);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 60%; left: 85%; animation-delay: 2s; }
+        .particle:nth-child(3) { top: 80%; left: 20%; animation-delay: 4s; }
+        .particle:nth-child(4) { top: 30%; left: 70%; animation-delay: 6s; }
+        .particle:nth-child(5) { top: 50%; left: 5%; animation-delay: 1s; }
+        .particle:nth-child(6) { top: 15%; left: 90%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+            25% { transform: translateY(-20px) rotate(90deg); opacity: 1; }
+            50% { transform: translateY(-10px) rotate(180deg); opacity: 0.8; }
+            75% { transform: translateY(-30px) rotate(270deg); opacity: 1; }
+        }
+
+        .badge {
+            position: absolute;
+            bottom: 40px;
+            right: 60px;
+            background: rgba(64, 224, 208, 0.1);
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: rgba(64, 224, 208, 0.9);
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="grid-bg"></div>
+        
+        <div class="floating-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <div class="title">
+            <h1 class="main-title">Listen Real-Time<br>React on Your Terms</h1>
+            <p class="subtitle">Separating ingestion from reaction in modern data pipelines</p>
+        </div>
+
+        <div class="pipeline-container">
+            <div class="data-source">
+                Database<br>Changes
+            </div>
+            
+            <div class="flow-arrow animated"></div>
+            
+            <div class="kafka-hub">
+                <div>KAFKA</div>
+                <div style="font-size: 12px; font-weight: 500; margin-top: 4px; opacity: 0.8;">Event Stream</div>
+            </div>
+            
+            <div class="flow-arrow animated"></div>
+            
+            <div class="consumers">
+                <div class="consumer realtime">
+                    Fraud Detection<br><span style="opacity: 0.8; font-size: 11px;">Real-time</span>
+                </div>
+                <div class="consumer batch">
+                    ETL Pipeline<br><span style="opacity: 0.8; font-size: 11px;">Micro-batch</span>
+                </div>
+                <div class="consumer analytics">
+                    Analytics<br><span style="opacity: 0.8; font-size: 11px;">Scheduled</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="badge">
+            CDC + Kafka + dlt
+        </div>
+    </div>
+</body>
+</html>
