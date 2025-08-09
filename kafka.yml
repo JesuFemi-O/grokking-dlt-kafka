@@ -1,5 +1,5 @@
 resources:
-  - name: basic_usage_json_example
+  - name: basic_json_example
     kafka:
       type: simple
       consumer_group_id: basic_usage_group
@@ -20,5 +20,16 @@ resources:
     processing:
       serializer: avro
       target_dataset: dlt_kafka_ecommerce
+      batch_size: 1000
+      batch_timeout: 5
+  
+  - name: cdc_example
+    kafka:
+      type: simple
+      consumer_group_id: avro_usage_group
+      topics_regex: "debezium.*"
+    processing:
+      serializer: avro
+      target_dataset: dlt_cdc_pipeline
       batch_size: 1000
       batch_timeout: 5

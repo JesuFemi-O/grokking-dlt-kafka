@@ -1,0 +1,30 @@
+{
+    "name": "pg-src-connector",
+    "config": {
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "plugin.name": "pgoutput",
+        "tasks.max": "1",
+        "slot.name": "sales_slot",
+        "publication.name": "sales_pub",
+        "decimal.handling.mode": "precise",
+        "database.hostname": "postgres",
+        "database.port": "5432",
+        "database.user": "postgres",
+        "database.password": "postgres",
+        "database.dbname": "inventory",
+        "database.server.name": "postgres",
+        "topic.prefix": "debezium",
+        "table.include.list": "app.*",
+        "key.converter.schemas.enable": "true",
+        "key.converter": "io.confluent.connect.avro.AvroConverter",
+        "key.converter.schema.registry.url": "http://schema-registry:8081",
+        "value.converter.schemas.enable": "true",
+        "value.converter": "io.confluent.connect.avro.AvroConverter",
+        "value.converter.schema.registry.url": "http://schema-registry:8081",
+        "transforms": "unwrap",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+        "transforms.unwrap.add.fields": "op,source.table,source.ts_ms",
+        "transforms.unwrap.delete.handling.mode": "rewrite",
+        "transforms.unwrap.drop.tombstones": "true"
+    }
+}
