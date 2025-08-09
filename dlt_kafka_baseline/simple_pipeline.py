@@ -19,7 +19,7 @@ def load_data_with_custom_kafka_consumer() -> None:
     consumer = Consumer(consumer_conf)
 
     pipeline = dlt.pipeline(
-        pipeline_name="simple_kafka_duckdb_pipeline",
+        pipeline_name="basic_kafka_duckdb_pipeline",
         destination='duckdb',
         dataset_name="kafka_messages",
         progress='log',
