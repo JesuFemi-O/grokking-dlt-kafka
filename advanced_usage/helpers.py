@@ -26,7 +26,7 @@ class KafkaConfig(BaseModel):
     
 class ProcessingConfig(BaseModel):
     serializer: str  # 'json' or 'avro'
-    target_table: Optional[str]
+    target_dataset: Optional[str]
     batch_size: Optional[int] = 3000
     batch_timeout: Optional[int] = 3
 
@@ -78,14 +78,14 @@ class ResourceConfig(BaseModel):
                 batch_size=self.processing.batch_size,
                 batch_timeout=self.processing.batch_timeout,
                 offset_tracker=CustomOffsetTracker
-            ).with_name(self.processing.target_table or self.name)
+            ).with_name(self.processing.target_dataset or self.name)
         )
 
     def build_pipeline(self, destination: str = "duckdb") -> dlt.Pipeline:
         return dlt.pipeline(
             pipeline_name=f"{self.name}_{destination}",
             destination=destination,
-            dataset_name=self.processing.target_table or self.name,
+            dataset_name=self.processing.target_dataset or self.name,
             progress="log"
         )
 

@@ -142,7 +142,7 @@ docker exec -it dlt-pipeline-runner \
     security_protocol: PLAINTEXT
   processing:
     serializer: avro
-    target_table: users_table
+    target_dataset: users_table
     batch_size: 500
     batch_timeout: 3
 ```

@@ -1,46 +1,24 @@
 resources:
-  - name: basic_usage_json
+  - name: basic_usage_json_example
     kafka:
       type: simple
       consumer_group_id: basic_usage_group
       topics:
-        - basic_usage_json_topic
+        - user_json_topic
+        # - product_json_topic
     processing:
       serializer: json
-      target_table: basic_usage_json_table
-      batch_size: 1000
-      batch_timeout: 5
-
-  - name: basic_usage_json_v2
-    kafka:
-      type: simple
-      consumer_group_id: basic_usage_group
-      topics:
-        - basic_usage_json_topic
-    processing:
-      serializer: json
-      target_table: basic_usage_json_table
-      batch_size: 1000
-      batch_timeout: 5
-
-  - name: dlt_kafka_avro
-    kafka:
-      type: simple
-      consumer_group_id: avro_usage_group
-      topics_regex: "^dlt_kafka_src\\.demo_schema\\..*"
-    processing:
-      serializer: avro
-      target_table: dlt_kafka_customers_table
+      target_dataset: json_sources
       batch_size: 1000
       batch_timeout: 5
   
-  - name: avro_basic_example_v0
+  - name: basic_avro_example
     kafka:
       type: simple
       consumer_group_id: avro_usage_group
       topics_regex: ".*_avro_topic$"
     processing:
       serializer: avro
-      target_table: dlt_kafka_customers_table
+      target_dataset: dlt_kafka_ecommerce
       batch_size: 1000
       batch_timeout: 5
