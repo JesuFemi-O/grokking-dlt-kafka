@@ -40,6 +40,71 @@ services:
       SCHEMA_REGISTRY_DEBUG: 'true'
       SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR: 1
   
+  kafka-connect:
+    image: dlt/kafka-connect:latest
+    platform: linux/amd64
+    container_name: kafka-connect
+    depends_on:
+      - kafka
+      - schema-registry
+    ports:
+      - "8083:8083"
+    environment:
+      environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: connect-cluster
+      CONFIG_STORAGE_TOPIC: connect-configs
+      OFFSET_STORAGE_TOPIC: connect-offsets
+      STATUS_STORAGE_TOPIC: connect-status 
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
+      VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_PLUGIN_PATH: /kafka/connect/plugins,/kafka/connect
+  
+  console:
+    image: docker.redpanda.com/redpandadata/console:v2.8.5
+    container_name: redpanda-console
+    restart: on-failure
+    entrypoint: /bin/sh
+    command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["kafka:9092"]
+          schemaRegistry:
+            enabled: true
+            urls:
+              - http://schema-registry:8081
+        connect:
+          enabled: true
+          clusters:
+            - name: dlt-kafka-connect
+              url: http://kafka-connect:8083
+    ports:
+      - "8084:8080"
+    depends_on:
+      - kafka
+      - kafka-connect
+      - schema-registry
+  
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: inventory
+    volumes:
+      - ./kafka-connect/postgres/.init.sql:/docker-entrypoint-initdb.d/init.sql
+
   data-generator:
     build: ./data-generator
     container_name: data-generator

@@ -57,5 +57,5 @@ def load_data_from_avro_topic() -> None:
     print(info)
 
 if __name__ == "__main__":
-    load_data_with_custom_kafka_consumer()
-    # load_data_from_avro_topic()
+    # load_data_with_custom_kafka_consumer()
+    load_data_from_avro_topic()
